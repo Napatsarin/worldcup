@@ -1,9 +1,6 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
+mport 'dart:convert';
 import '../models/api_result.dart';
-
+import 'package:http/http.dart' as http;
 class Api {
   static const apiBaseUrl = 'http://103.74.252.66:8888';
 
@@ -17,7 +14,6 @@ class Api {
       headers: {'Content-Type': 'application/json'},
       body: json.encode(params),
     );
-
 
     if (response.statusCode == 200) {
       // แปลง text ที่มีรูปแบบเป็น JSON ไปเป็น Dart's data structure (List/Map)
@@ -61,7 +57,7 @@ class Api {
         throw apiResult.message!;
       }
     } else {
-      throw '[${response.statusCode}] Server connection failed!';
+      throw 'Server connection failed!';
     }
   }
 }

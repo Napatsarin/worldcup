@@ -1,84 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_food_20221016/models/food_item.dart';
-import 'package:flutter_food_20221016/services/api.dart';
+import 'package:final_630710659/models/team_item.dart';
+import 'package:final_630710659/services/api.dart';
 
-class FoodListPage extends StatefulWidget {
-  const FoodListPage({Key? key}) : super(key: key);
+class TeamListPage extends StatefulWidget {
+  const TeamListPage({Key? key}) : super(key: key);
 
   @override
-  _FoodListPageState createState() => _FoodListPageState();
+  _TeamListPageState createState() => _TeamListPageState();
 }
 
-class _FoodListPageState extends State<FoodListPage> {
-  List<FoodItem>? _foodList;
+class _TeamListPageState extends State<TeamListPage> {
+  List<TeamItem>? _TeamList;
   var _isLoading = false;
   String? _errMessage;
 
   @override
   void initState() {
     super.initState();
-    _fetchFoodData();
+    _fetchTeamData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('World Cup 2022')),
-      body: Column(
-        children: [
-          /*Container(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: _fetchFoodData,
-              child: const Text('GET FOOD DATA'),
-            ),
-          ),*/
-          Expanded(
-            child: Stack(
-              children: [
-                if (_foodList != null)
-                  ListView.builder(
-                    itemBuilder: _buildListItem,
-                    itemCount: _foodList!.length,
-                  ),
-                if (_isLoading)
-                  const Center(child: CircularProgressIndicator()),
-                if (_errMessage != null && !_isLoading)
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(24.0),
-                          child: Text(_errMessage!),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _fetchFoodData();
-                          },
-                          child: const Text('RETRY'),
-                        )
-                      ],
-                    ),
-                  ),
-              ],
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bg.png'),
+            fit: BoxFit.cover,
           ),
-        ],
+        ),
+        child: Column(
+          children: [
+            Image.asset('assets/images/logo.jpg', height: 280.0,width: 400.0),
+            Expanded(
+              child: Stack(
+                children: [
+                  if (_TeamList != null)
+                    ListView.builder(
+                      itemBuilder: _buildListItem,
+                      itemCount: _TeamList!.length,
+                    ),
+                  if (_isLoading)
+                    const Center(child: CircularProgressIndicator()),
+                  if (_errMessage != null && !_isLoading)
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Text(_errMessage!),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              _fetchTeamData();
+                            },
+                            child: const Text('RETRY'),
+                          )
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void _fetchFoodData() async {
+  void _fetchTeamData() async {
     setState(() {
       _isLoading = true;
     });
 
     try {
-      var data = await Api().fetch();
+      var data = await Api().fetch('');
       setState(() {
-        _foodList = data
-            .map<FoodItem>((item) => FoodItem.fromJson(item))
+        _TeamList = data
+            .map<TeamItem>((item) => TeamItem.fromJson(item))
             .toList();
         _isLoading = false;
       });
@@ -91,7 +92,7 @@ class _FoodListPageState extends State<FoodListPage> {
   }
 
   Widget _buildListItem(BuildContext context, int index) {
-    var foodItem = _foodList![index];
+    var teamItem = _TeamList![index];
 
     return Card(
       child: InkWell(
@@ -99,15 +100,28 @@ class _FoodListPageState extends State<FoodListPage> {
         child: Row(
           children: [
             Image.network(
-              foodItem.image,
+              teamItem.flagImage,
               width: 80.0,
               height: 80.0,
               fit: BoxFit.cover,
             ),
             const SizedBox(width: 8.0),
-            Text(foodItem.name),
+            Text(teamItem.team),
+            Row(
+              children: [
+                Padding(padding: const EdgeInsets.all(8.0),
+                  child: Text(' Group ', style: TextStyle(fontSize: 15)
+                  ),
+                ),
+              ],
+            ),
+            Text(teamItem.group),
+            TextButton(onPressed: (){
+              // counter
+            }, child: Text("VOTE"),)
           ],
         ),
+
       ),
     );
   }
